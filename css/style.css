@@ -1,0 +1,28 @@
+/* css/style.css - clean minimal theme */
+:root {
+  --green:#2d6a4f;
+  --green-2:#40916c;
+  --accent:#ffc300;
+  --muted:#6b7280;
+  --bg:#f1fbf6;
+  --card:#fff;
+}
+*{box-sizing:border-box}
+body{font-family:Inter,Arial,sans-serif;background:var(--bg);color:#0f172a;margin:0}
+.container{max-width:1000px;margin:18px auto;padding:0 16px}
+.topbar{background:var(--green);color:white;padding:12px 0}
+.topbar .container{display:flex;align-items:center;justify-content:space-between}
+.topbar nav a{color:white;text-decoration:none;margin-left:12px;font-weight:600}
+.hero{padding:22px 0}
+.card{background:var(--card);padding:16px;border-radius:12px;box-shadow:0 6px 18px rgba(16,24,40,0.06);margin-bottom:12px}
+.btn{background:var(--green);color:#fff;padding:8px 12px;border-radius:8px;border:none;cursor:pointer}
+.btn.small{padding:6px 8px;font-size:13px}
+.btn.outline{background:transparent;border:2px solid var(--green);color:var(--green)}
+input,select,textarea{width:100%;padding:8px;border-radius:8px;border:1px solid #e6eef1;margin-top:6px}
+label{font-weight:700;color:var(--muted);display:block;margin-top:10px}
+.note{background:#e6fff6;border-left:4px solid var(--green-2);padding:8px;border-radius:6px;margin-top:8px}
+.note.danger{background:#fff0f0;border-left:4px solid #f43f5e}
+.request-card{padding:10px;border:1px dashed #e8f7ef;border-radius:8px;margin-bottom:8px}
+.request-card button{margin-right:8px}
+#matchesList ul{list-style:none;padding-left:0}
+@media(max-width:720px){.topbar .container{flex-direction:column;gap:10px}.container{padding:12px}}

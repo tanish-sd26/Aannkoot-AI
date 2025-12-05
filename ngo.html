@@ -1,0 +1,41 @@
+<!-- ngo.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>NGO — Aannkoot Connect</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"/>
+  <style>#map {height:280px;margin-top:12px;border-radius:8px;}</style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container">
+      <h1>NGO Dashboard</h1>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="ngo.html">Requests</a>
+        <a href="dashboard-ngo.html">My Insights</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h2>Nearby Requests</h2>
+      <div id="requestsList">Loading requests...</div>
+    </section>
+
+    <section class="card">
+      <h2>Map</h2>
+      <div id="map"></div>
+    </section>
+  </main>
+
+  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+  <script type="module" src="js/firebase.js"></script>
+  <script type="module" src="js/ngo.js"></script>
+  <script type="module" src="js/matching.js"></script>
+</body>
+</html>

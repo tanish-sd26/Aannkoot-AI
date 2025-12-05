@@ -1,0 +1,5 @@
+[
+  {"name":"Helping Hands", "lat":19.2195, "lng":73.0955, "contact":"+91 9876543210", "capacity":50, "minAcceptHours":0.5},
+  {"name":"Food For All", "lat":19.2170, "lng":73.0938, "contact":"+91 9123456780", "capacity":30, "minAcceptHours":0.5},
+  {"name":"Care & Share", "lat":19.2140, "lng":73.1000, "contact":"+91 9988776655", "capacity":100, "minAcceptHours":1}
+]

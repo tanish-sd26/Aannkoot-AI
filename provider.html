@@ -1,0 +1,69 @@
+<!-- provider.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Provider — Aannkoot Connect</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="container">
+      <h1>Provider Dashboard</h1>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="provider.html">Post Food</a>
+        <a href="dashboard-provider.html">My Insights</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h2>Post Surplus Food</h2>
+      <form id="postFoodForm">
+        <label>Provider Type</label>
+        <select id="providerType">
+          <option value="hostel">Hostel / Mess</option>
+          <option value="restaurant">Restaurant</option>
+          <option value="event">Event / Marriage</option>
+          <option value="caterer">Caterer</option>
+        </select>
+
+        <label>Food Name</label>
+        <input id="foodName" placeholder="Ex: Rajma Chawal" required>
+
+        <label>Quantity (kg or servings)</label>
+        <input id="quantity" type="number" min="0" step="0.1" value="10" required>
+
+        <label>Time Prepared</label>
+        <input id="preparedAt" type="datetime-local" required>
+
+        <label>Image (for quality check)</label>
+        <input id="foodImage" type="file" accept="image/*">
+
+        <label>Auto-detect location</label>
+        <button type="button" id="detectLocation" class="btn small">Use my location</button>
+        <div id="locInfo" style="margin-top:8px;color:#333;"></div>
+
+        <div style="margin-top:12px;">
+          <button class="btn" type="submit">Post Surplus</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="card" style="margin-top:16px;">
+      <h3>Live Matches & Alerts</h3>
+      <div id="matchesList">No matches yet.</div>
+      <div id="providerAlerts" style="margin-top:12px;"></div>
+    </section>
+  </main>
+
+  <!-- Load modules -->
+  <script type="module" src="js/firebase.js"></script>
+  <script type="module" src="js/ai_quality.js"></script>
+  <script type="module" src="js/matching.js"></script>
+  <script type="module" src="js/provider.js"></script>
+</body>
+</html>

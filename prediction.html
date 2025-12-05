@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Surplus Prediction</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <h1>Food Surplus Prediction</h1>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="prediction.html">Prediction</a>
+            <a href="ngo.html">NGO Map</a>
+            <a href="dashboard-provider.html">Provider Dashboard</a>
+        </nav>
+    </header>
+
+    <main>
+        <form id="predictionForm">
+            <label for="studentCount">Number of Students:</label>
+            <input type="number" id="studentCount" required>
+
+            <label for="mealType">Meal Type:</label>
+            <select id="mealType">
+                <option value="breakfast">Breakfast</option>
+                <option value="lunch">Lunch</option>
+                <option value="dinner">Dinner</option>
+            </select>
+
+            <label for="day">Day of Week:</label>
+            <select id="day">
+                <option value="Monday">Monday</option>
+                <option value="Tuesday">Tuesday</option>
+                <option value="Wednesday">Wednesday</option>
+                <option value="Thursday">Thursday</option>
+                <option value="Friday">Friday</option>
+                <option value="Saturday">Saturday</option>
+                <option value="Sunday">Sunday</option>
+            </select>
+
+            <label>Dish</label>
+            <select id="dish" required>
+                <option value="Rice">Rice</option>
+                <option value="Dal">Dal</option>
+                <option value="Sabzi">Sabzi</option>
+                <option value="Chapati">Chapati</option>
+                <option value="Sweet">Sweet</option>
+            </select>
+
+            <button type="submit">Predict</button>
+        </form>
+
+        <div id="predictionResult"></div>
+    </main>
+
+    <script type="module" src="js/firebase.js"></script>
+    <script type="module" src="js/prediction.js"></script>
+</body>
+</html>
