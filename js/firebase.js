@@ -1,57 +1,55 @@
 // js/firebase.js
-// Firebase v9 modular (CDN import in ES module style)
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+// Use modular Firebase SDK (v10). Replace firebaseConfig with your web app config.
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
 import {
   getFirestore,
   collection,
   addDoc,
-  doc,
-  setDoc,
   getDocs,
   getDoc,
+  doc,
   query,
   where,
   orderBy,
-  serverTimestamp,
-  updateDoc
-} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+  updateDoc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
 import {
   getAuth,
-  signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
   signOut
-} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+} from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
 
-// ---------- REPLACE WITH YOUR CONFIG (use the one you already have) ----------
+// ----- PASTE YOUR FIREBASE CONFIG HERE -----
 const firebaseConfig = {
   apiKey: "AIzaSyAh7oItxlBcWgXWNvgJNGuJSo__g1vefYc",
   authDomain: "aannkoot-ai.firebaseapp.com",
   projectId: "aannkoot-ai",
-  storageBucket: "aannkoot-ai.firebasestorage.app",
+  storageBucket: "aannkoot-ai.appspot.com",
   messagingSenderId: "800975015334",
   appId: "1:800975015334:web:06e9816d2d6b6da9645367"
 };
-// ---------------------------------------------------------------------------
+// -------------------------------------------
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
-// Export commonly used functions/objects
+// Export what other modules will use
 export {
   db,
   auth,
   collection,
   addDoc,
-  doc,
-  setDoc,
   getDocs,
   getDoc,
+  doc,
   query,
   where,
   orderBy,
-  serverTimestamp,
   updateDoc,
+  serverTimestamp,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut

@@ -1,29 +1,37 @@
 // js/matching.js
 import { calcDistanceKm } from "./utils.js";
-import { getDocs, collection, query, where } from "./firebase.js";
+import { db, getDocs, collection } from "./firebase.js";
 
-// Simple ranking function
-function rankNGO(ngo, providerLoc, estHoursLeft, qty) {
-  // distance score (smaller better)
-  const dist = calcDistanceKm(providerLoc.lat, providerLoc.lng, ngo.lat, ngo.lng);
-  // capacity fit: prefer NGOs with capacity >= qty (capacity is in kg)
-  let capacityScore = ngo.capacity >= qty ? 0 : (qty - ngo.capacity) / ngo.capacity;
-  // freshness factor: if estHoursLeft < ngo.minDeliveryWindow -> penalize
-  const freshnessPenalty = estHoursLeft < (ngo.minAcceptHours || 1) ? 5 : 0;
-  // final score combine (lower = better)
-  return dist + capacityScore * 10 + freshnessPenalty;
+// Fetch NGOs from Firestore; if fails, fallback to data/ngos.json
+export async function fetchNGOs() {
+  try {
+    const snap = await getDocs(collection(db, "ngos"));
+    const list = [];
+    snap.forEach(d => list.push({ id: d.id, ...d.data() }));
+    if (list.length) return list;
+  } catch (e) {
+    console.warn("Firestore ngos fetch failed, using local JSON", e);
+  }
+  // fallback
+  try {
+    const res = await fetch("data/ngos.json");
+    return await res.json();
+  } catch (e) {
+    console.error("Failed to load data/ngos.json", e);
+    return [];
+  }
 }
 
-// Returns sorted NGOs list (closest/best first). Assumes ngos list provided or fetched from data/ngos.json
-export async function findBestNGOs(providerLoc, estHoursLeft, qty) {
-  // Try to fetch NGO docs from Firestore 'ngos' collection; if none, fallback to data file fetch
-  try {
-    const q = query(collection(window.db, "ngos"));
-    // But window.db isn't accessible; to keep it simple, first try getDocs with exported function
-  } catch(e) {
-    // ignore - we'll use local data fallback approach by provider.js or ngo.json
-  }
-  // This function typically will be fed a local ngos array; provider.js will call with that array.
-  // So here just keep a placeholder - real ranking is in provider.js using this helper.
-  return [];
+// Rank NGOs by distance + capacity fit + freshness suitability (lower score better)
+export function rankNGOs(ngos, providerLoc, estHoursLeft, qty) {
+  const ranked = ngos.map(ngo => {
+    const distance = calcDistanceKm(providerLoc.lat, providerLoc.lng, ngo.lat, ngo.lng);
+    const capacityDiff = Math.max(0, qty - (ngo.capacity || 20));
+    const capacityPenalty = capacityDiff / (ngo.capacity || 20);
+    const freshnessPenalty = estHoursLeft < (ngo.minAcceptHours || 0.5) ? 5 : 0;
+    const score = distance + capacityPenalty * 10 + freshnessPenalty;
+    return { ngo, distance, score };
+  });
+  ranked.sort((a,b) => a.score - b.score);
+  return ranked;
 }

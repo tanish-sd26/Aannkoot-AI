@@ -1,0 +1,6 @@
+[
+  {"mealType":"breakfast","day":"Monday","dish":"Rice","studentCount":50,"actualConsumed":45},
+  {"mealType":"lunch","day":"Monday","dish":"Rice","studentCount":50,"actualConsumed":48},
+  {"mealType":"lunch","day":"Tuesday","dish":"Dal","studentCount":52,"actualConsumed":44},
+  {"mealType":"dinner","day":"Tuesday","dish":"Sabzi","studentCount":52,"actualConsumed":40}
+]
