@@ -28,5 +28,40 @@
 
   <script type="module" src="js/firebase.js"></script>
   <script type="module" src="js/ngo.js"></script>
+  <div id="donation-list"></div>
+
+<script type="module">
+import { db, collection, getDocs } from "./js/firebase.js";
+
+async function loadDonations() {
+    const listDiv = document.getElementById("donation-list");
+    listDiv.innerHTML = "<p>Loading...</p>";
+
+    const snap = await getDocs(collection(db, "donations"));
+
+    listDiv.innerHTML = "";
+
+    snap.forEach(docu => {
+        const d = docu.data();
+
+        listDiv.innerHTML += `
+            <div class="donation-card">
+                <h3>${d.food_type}</h3>
+                <p><b>Quantity:</b> ${d.quantity}</p>
+                <p><b>Location:</b> ${d.location}</p>
+                <p><b>Status:</b> ${d.status}</p>
+
+                <button class="accept-btn" data-id="${docu.id}">Accept</button>
+                <button class="reject-btn" data-id="${docu.id}">Reject</button>
+            </div>
+        `;
+    });
+}
+
+loadDonations();
+</script>
+
+<script type="module" src="./js/ngo.js"></script>
+
 </body>
 </html>
