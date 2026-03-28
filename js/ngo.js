@@ -1,4 +1,4 @@
-import { db, collection, getDocs, doc, updateDoc, serverTimestamp } from "./firebase.js";
+import { db, collection, getDocs, doc, updateDoc, serverTimestamp, authReady } from "./firebase.js";
 import { formatTimestamp } from "./utils.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   async function loadRequests() {
     requestsList.innerHTML = "Loading...";
     try {
+      await authReady;
       const snap = await getDocs(collection(db, "requests"));
       const docs = [];
       snap.forEach(d => docs.push({ id: d.id, ...d.data() }));

@@ -18,6 +18,7 @@ import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  signInAnonymously,
   signOut
 } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
 
@@ -35,11 +36,16 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
+const authReady = signInAnonymously(auth).catch(err => {
+  console.warn("Firebase anonymous sign-in failed", err);
+  return null;
+});
 
 // Export what other modules will use
 export {
   db,
   auth,
+  authReady,
   collection,
   addDoc,
   getDocs,

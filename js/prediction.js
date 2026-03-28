@@ -1,5 +1,5 @@
 // js/prediction.js
-import { db, collection, addDoc, serverTimestamp } from "./firebase.js";
+import { db, collection, addDoc, serverTimestamp, authReady } from "./firebase.js";
 
 let sampleData = [];
 
@@ -47,6 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Save Prediction button
     document.getElementById("savePrediction").onclick = async () => {
       try {
+        await authReady;
         await addDoc(collection(db, "predictions"), {
           studentCount, mealType, day, dish,
           requiredFood, plannedFood, surplus,
@@ -62,6 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Request NGO button
     document.getElementById("requestNGO").onclick = async () => {
       try {
+        await authReady;
         await addDoc(collection(db, "pickupRequests"), {
           dish, mealType, day, surplusKg: surplus,
           status: "pending", timestamp: serverTimestamp()

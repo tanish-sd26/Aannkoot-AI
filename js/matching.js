@@ -1,10 +1,11 @@
 // js/matching.js
 import { calcDistanceKm } from "./utils.js";
-import { db, getDocs, collection } from "./firebase.js";
+import { db, getDocs, collection, authReady } from "./firebase.js";
 
 // Fetch NGOs from Firestore; if fails, fallback to data/ngos.json
 export async function fetchNGOs() {
   try {
+    await authReady;
     const snap = await getDocs(collection(db, "ngos"));
     const list = [];
     snap.forEach(d => list.push({ id: d.id, ...d.data() }));

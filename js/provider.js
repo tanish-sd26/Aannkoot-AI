@@ -1,5 +1,5 @@
 // js/provider.js
-import { db, collection, addDoc, serverTimestamp } from "./firebase.js";
+import { db, collection, addDoc, serverTimestamp, authReady } from "./firebase.js";
 import { analyzeImage } from "./ai_quality.js";
 import { fetchNGOs, rankNGOs } from "./matching.js";
 import { calcDistanceKm } from "./utils.js";
@@ -16,6 +16,7 @@ let ngosList = [];
 
 // Load NGOs immediately
 (async () => {
+  await authReady;
   ngosList = await fetchNGOs();
 })();
 
@@ -37,7 +38,7 @@ detectBtn.addEventListener("click", () => {
       detectBtn.innerText = "Use my location";
     },
     (err) => {
-      console.error(err);
+      console.warn(err);
       locInfo.innerText = "Location access denied.";
       detectBtn.disabled = false;
       detectBtn.innerText = "Use my location";
@@ -87,6 +88,7 @@ form.addEventListener("submit", async (e) => {
 
   // Save provider post
   try {
+    await authReady;
     await addDoc(collection(db, "providerPosts"), {
       providerType,
       foodName,
@@ -115,6 +117,7 @@ matchesList.addEventListener("click", async (ev) => {
   const ngoName = btn.getAttribute("data-name");
 
   try {
+    await authReady;
     await addDoc(collection(db, "requests"), {
       ngoName,
       foodName: document.getElementById("foodName").value.trim(),

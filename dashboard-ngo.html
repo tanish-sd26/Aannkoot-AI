@@ -30,12 +30,13 @@
   <div id="donation-list"></div>
 
 <script type="module">
-import { db, collection, getDocs } from "./js/firebase.js";
+import { db, collection, getDocs, authReady } from "./js/firebase.js";
 
 async function loadDonations() {
     const listDiv = document.getElementById("donation-list");
     listDiv.innerHTML = "<p>Loading...</p>";
 
+    await authReady;
     const snap = await getDocs(collection(db, "donations"));
 
     listDiv.innerHTML = "";
