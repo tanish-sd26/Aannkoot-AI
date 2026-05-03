@@ -53,5 +53,5 @@ Aannkoot Connect is a smart platform to minimize food waste by efficiently distr
 npx http-server
 
 # Screenshots
-<img width="500" height="800" alt="image" src="https://github.com/user-attachments/assets/0768cbfc-d2dd-4b6a-8611-6f582563996f" />
-<img width="500" height="600" alt="image" src="https://github.com/user-attachments/assets/dfd91a1f-5683-461e-9193-fea985393578" />
+<img width="650" height="800" alt="image" src="https://github.com/user-attachments/assets/0768cbfc-d2dd-4b6a-8611-6f582563996f" />
+<img width="650" height="600" alt="image" src="https://github.com/user-attachments/assets/dfd91a1f-5683-461e-9193-fea985393578" />
