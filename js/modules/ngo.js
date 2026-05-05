@@ -1,5 +1,5 @@
-import { db, collection, getDocs, doc, updateDoc, serverTimestamp, authReady } from "./firebase.js";
-import { formatTimestamp } from "./utils.js";
+import { db, collection, getDocs, doc, updateDoc, serverTimestamp, authReady } from "../core/firebase.js";
+import { formatTimestamp } from "../utils.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   const requestsList = document.getElementById("requestsList");

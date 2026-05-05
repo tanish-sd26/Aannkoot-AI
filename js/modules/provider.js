@@ -1,8 +1,8 @@
 // js/provider.js
-import { db, collection, addDoc, serverTimestamp, authReady } from "./firebase.js";
+import { db, collection, addDoc, serverTimestamp, authReady } from "../core/firebase.js";
 import { analyzeImage } from "./ai_quality.js";
-import { fetchNGOs, rankNGOs } from "./matching.js";
-import { calcDistanceKm } from "./utils.js";
+import { fetchNGOs, rankNGOs } from "../matching.js";
+import { calcDistanceKm } from "../utils/utils.js";
 
 // --- DIRECT ELEMENT ACCESS (NO DOMContentLoaded) ---
 const detectBtn = document.getElementById("detectLocation");
