@@ -1,8 +1,9 @@
 // js/provider.js
 import { db, collection, addDoc, serverTimestamp, authReady } from "../core/firebase.js";
-import { analyzeImage } from "./ai_quality.js";
-import { fetchNGOs, rankNGOs } from "../matching.js";
+import { analyzeImage } from "./ai.js";
+import { fetchNGOs, rankNGOs } from "./matching.js";
 import { calcDistanceKm } from "../utils/utils.js";
+import { loadProviderAlerts } from "./alerts.js";
 
 // --- DIRECT ELEMENT ACCESS (NO DOMContentLoaded) ---
 const detectBtn = document.getElementById("detectLocation");
@@ -13,6 +14,7 @@ const alertsDiv = document.getElementById("providerAlerts");
 
 let currentLoc = null;
 let ngosList = [];
+let locationSet = false;
 
 // Load NGOs immediately
 (async () => {
@@ -33,6 +35,7 @@ detectBtn.addEventListener("click", () => {
   navigator.geolocation.getCurrentPosition(
     (pos) => {
       currentLoc = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+      locationSet = true;
       locInfo.innerText = `Location: ${currentLoc.lat.toFixed(4)} , ${currentLoc.lng.toFixed(4)}`;
       detectBtn.disabled = false;
       detectBtn.innerText = "Use my location";
@@ -57,14 +60,17 @@ form.addEventListener("submit", async (e) => {
   const preparedAt = document.getElementById("preparedAt").value;
   const imageFile = document.getElementById("foodImage").files[0];
 
+  // Location validation
+  if (!locationSet && !currentLoc) {
+    alertsDiv.innerHTML = `<div class="note danger">Please use the location button before submitting.</div>`;
+    return;
+  }
+
+  // Loading state
+  alertsDiv.innerHTML = `<div class="note">Posting...</div>`;
+
   // AI image check (mock)
   const ai = await analyzeImage(imageFile);
-
-  // if user didn't click "Use my location"
-  if (!currentLoc) {
-    currentLoc = { lat: 19.2183, lng: 73.0940 }; // fallback
-    locInfo.innerText = `Using default location (${currentLoc.lat}, ${currentLoc.lng})`;
-  }
 
   // Local NGO ranking
   const ranked = rankNGOs(ngosList, currentLoc, ai.estHoursLeft, quantity);
@@ -103,6 +109,8 @@ form.addEventListener("submit", async (e) => {
     });
 
     alertsDiv.innerHTML = `<div class="note">Posted successfully and suggestions shown.</div>`;
+    // Load provider alerts after post
+    loadProviderAlerts("#providerAlerts");
   } catch (err) {
     console.error("Save provider post failed", err);
     alertsDiv.innerHTML = `<div class="note danger">Could not save post. Check console.</div>`;
