@@ -1,6 +1,6 @@
 // js/alerts.js
-import { db, collection, query, where, getDocs, orderBy, authReady } from "./firebase.js";
-import { formatTimestamp } from "./utils.js";
+import { db, collection, query, where, getDocs, orderBy, authReady } from "../core/firebase.js";
+import { formatTimestamp } from "../utils/utils.js";
 
 export async function loadProviderAlerts(containerSelector) {
   const container = document.querySelector(containerSelector);
