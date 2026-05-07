@@ -82,8 +82,8 @@ npx http-server
 
 ## 📸 Screenshots
 
- **Home**                                                                                  
-<img width="1920" height="912" alt="home" src="https://github.com/user-attachments/assets/272a6d21-d31c-42e6-b2ed-db71c791af92" />
+ **Home**      
+ <img width="1920" height="912" alt="Home (2)" src="https://github.com/user-attachments/assets/eb23f99f-9e3c-4ac7-b87d-c33fc73c5a43" />
 
 **Provider**
 <img width="1920" height="1863" alt="Provider-Dashboard" src="https://github.com/user-attachments/assets/e3152ae2-9f1d-4cca-87cd-5c2d8e9f95d4" />
