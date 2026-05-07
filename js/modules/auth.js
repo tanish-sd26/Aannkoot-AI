@@ -1,6 +1,6 @@
 // js/auth.js
-import { auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "./firebase.js";
-import { addDoc, collection, db } from "./firebase.js"; // in case you want to store user profile
+import { auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "../core/firebase.js";
+import { addDoc, collection, db } from "../core/firebase.js"; // in case you want to store user profile
 
 export async function signup(email, password, role="provider") {
   try {
