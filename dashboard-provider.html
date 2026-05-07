@@ -19,14 +19,99 @@
     </div>
   </header>
 
-  <main class="container">
-    <section class="card">
-      <h2>Recent Surplus (Last 10)</h2>
-      <canvas id="recentChart" height="120"></canvas>
-    </section>
-  </main>
+ <main class="container">
 
-  <script type="module" src="js/firebase.js"></script>
-  <script type="module" src="js/alerts.js"></script>
+  <!-- 🔥 STATS -->
+  <section class="grid">
+    <div class="stat-card">
+      <h3>Total Posts</h3>
+      <p id="totalPosts">0</p>
+    </div>
+
+    <div class="stat-card">
+      <h3>Total Quantity</h3>
+      <p id="totalQty">0 kg</p>
+    </div>
+
+    <div class="stat-card">
+      <h3>Avg Freshness</h3>
+      <p id="avgFresh">0</p>
+    </div>
+  </section>
+
+  <!-- 🔥 CHART -->
+  <section class="card">
+    <h2>Recent Surplus (Last 10)</h2>
+    <canvas id="recentChart"></canvas>
+  </section>
+
+</main>
+
+  <script type="module" src="js/core/firebase.js"></script>
+  <script type="module">
+    import { db, collection, getDocs, authReady } from "./js/core/firebase.js";
+
+    async function loadChart() {
+      try {
+        await authReady;
+        const snap = await getDocs(collection(db, "providerPosts"));
+        const posts = [];
+        snap.forEach(d => posts.push(d.data()));
+
+        const last10 = posts.slice(-10);
+        const labels = last10.map((p, i) => `Post ${i + 1}`);
+        const quantities = last10.map(p => p.quantity || 0);
+        const freshness = last10.map(p => p.freshnessScore || 0);
+
+        const ctx = document.getElementById("recentChart").getContext("2d");
+        new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels,
+            datasets: [
+              {
+                label: "Quantity (kg)",
+                data: quantities,
+                backgroundColor: "rgba(45, 106, 79, 0.7)",
+              },
+              {
+                label: "Freshness Score",
+                data: freshness,
+                backgroundColor: "rgba(255, 195, 0, 0.7)",
+              }
+            ],
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { display: true },
+            },
+            scales: {
+              y: { beginAtZero: true, max: 100 },
+            },
+          },
+        });
+      
+      
+      // 🔥 Stats calculation
+        document.getElementById("totalPosts").innerText = posts.length;
+
+        const totalQty = posts.reduce((s, p) => s + (p.quantity || 0), 0);
+        document.getElementById("totalQty").innerText = totalQty + " kg";
+
+        const avgFresh = posts.length
+        ? Math.round(posts.reduce((s, p) => s + (p.freshnessScore || 0), 0) / posts.length)
+        : 0;
+
+        document.getElementById("avgFresh").innerText = avgFresh; 
+
+      }catch (err) {
+        console.error("Chart load failed", err);
+        document.getElementById("recentChart").parentElement.innerHTML = "<div class='note danger'>Failed to load chart data</div>";
+      }
+    }
+
+    loadChart();
+  </script>
 </body>
 </html>
