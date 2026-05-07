@@ -66,7 +66,7 @@ Aannkoot Connect ensures that this **surplus, safe-to-consume food** is efficien
 ---
 
 # Running on terminal 
-npx http-server
+ npx http-server
 
 ---
 
