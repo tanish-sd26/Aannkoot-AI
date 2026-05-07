@@ -1,7 +1,7 @@
 // js/provider.js
 import { db, collection, addDoc, serverTimestamp, authReady } from "../core/firebase.js";
-import { analyzeImage } from "./ai.js";
-import { fetchNGOs, rankNGOs } from "./matching.js";
+import { analyzeImage } from "./ai_quality.js";
+import { fetchNGOs, rankNGOs } from "../matching.js";
 import { calcDistanceKm } from "../utils/utils.js";
 import { loadProviderAlerts } from "./alerts.js";
 
@@ -75,22 +75,25 @@ form.addEventListener("submit", async (e) => {
   // Local NGO ranking
   const ranked = rankNGOs(ngosList, currentLoc, ai.estHoursLeft, quantity);
 
-  matchesList.innerHTML = `
-    <div><strong>AI Freshness:</strong> ${ai.verdict} (score ${ai.score}) - est ${ai.estHoursLeft}h</div>
-    <h4>Top NGO Suggestions</h4>
-    <ul>
-      ${ranked
-        .slice(0, 5)
-        .map(
-          (r) => `
-        <li>
-          <b>${r.ngo.name}</b> — ${r.distance} km — cap: ${r.ngo.capacity || "-"}
-          <button class="btn small" data-name="${r.ngo.name}">Request</button>
-        </li>`
-        )
-        .join("")}
-    </ul>
-  `;
+ matchesList.innerHTML = `
+  <div class="card">
+    <h3>🤖 AI Freshness Result</h3>
+    <p><strong>Status:</strong> ${ai.verdict}</p>
+    <p><strong>Score:</strong> ${ai.score}</p>
+    <p><strong>Time Left:</strong> ${ai.estHoursLeft} hrs</p>
+  </div>
+
+  <h3 style="margin-top:12px;">Top NGO Suggestions</h3>
+
+  ${ranked.slice(0, 5).map(r => `
+    <div class="card" style="margin-top:10px;">
+      <h4>${r.ngo.name}</h4>
+      <p>📍 Distance: ${r.distance} km</p>
+      <p>📦 Capacity: ${r.ngo.capacity || "-"}</p>
+      <button class="btn small" data-name="${r.ngo.name}">Request Pickup</button>
+    </div>
+  `).join("")}
+`;
 
   // Save provider post
   try {

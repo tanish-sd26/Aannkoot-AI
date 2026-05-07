@@ -19,47 +19,160 @@
     </div>
   </header>
 
-  <main class="container">
-    <section class="card">
-      <h2>Requests Overview</h2>
-      <canvas id="ngoChart" height="120"></canvas>
-    </section>
+ <main class="container">
+
+  <!-- 🔥 STATS -->
+  <section class="grid">
+    <div class="stat-card">
+      <h3>Accepted</h3>
+      <p id="acceptedCount">0</p>
+    </div>
+
+    <div class="stat-card">
+      <h3>Rejected</h3>
+      <p id="rejectedCount">0</p>
+    </div>
+
+    <div class="stat-card">
+      <h3>Pending</h3>
+      <p id="pendingCount">0</p>
+    </div>
+  </section>
+
+  <!-- 🔥 CHART -->
+  <section class="card">
+    <h2>Requests Overview</h2>
+    <canvas id="ngoChart"></canvas>
+  </section>
+
+  <!-- 🔥 DONATIONS -->
+  <section class="card">
+    <h2>Donations Received</h2>
+    <div id="donation-list"></div>
+  </section>
+
   </main>
+  <script type="module">
+    import { db, collection, getDocs, authReady, doc, updateDoc, serverTimestamp } from "./js/core/firebase.js";
 
-  <script type="module" src="js/firebase.js"></script>
-  <div id="donation-list"></div>
+    // Load chart
+    async function loadChart() {
+      try {
+        await authReady;
+        const snap = await getDocs(collection(db, "requests"));
+        const requests = [];
+        snap.forEach(d => requests.push(d.data()));
 
-<script type="module">
-import { db, collection, getDocs, authReady } from "./js/firebase.js";
+        // Count by status
+        const accepted = requests.filter(r => r.status === "accepted").length;
+        const rejected = requests.filter(r => r.status === "rejected").length;
+        const pending = requests.filter(r => r.status === "pending").length;
+        const ctx = document.getElementById("ngoChart").getContext("2d");
+        new Chart(ctx, {
+          type: "doughnut",
+          data: {
+            labels: ["Accepted", "Rejected", "Pending"],
+            datasets: [{
+              data: [accepted, rejected, pending],
+              backgroundColor: ["rgba(45, 106, 79, 0.8)", "rgba(244, 63, 94, 0.8)", "rgba(255, 195, 0, 0.8)"],
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: { legend: { display: true } }
+          }
+        });
+          document.getElementById("acceptedCount").innerText = accepted;
+          document.getElementById("rejectedCount").innerText = rejected;
+          document.getElementById("pendingCount").innerText = pending;
+      } catch (err) {
+        console.error("Chart load failed", err);
+      }
+    }
 
-async function loadDonations() {
-    const listDiv = document.getElementById("donation-list");
-    listDiv.innerHTML = "<p>Loading...</p>";
+    // Load donations and attach listeners
+    async function loadDonations() {
+      const listDiv = document.getElementById("donation-list");
+      listDiv.innerHTML = "<p>Loading...</p>";
 
-    await authReady;
-    const snap = await getDocs(collection(db, "donations"));
+      try {
+        await authReady;
+        const snap = await getDocs(collection(db, "donations"));
 
-    listDiv.innerHTML = "";
+        if (snap.empty) {
+          listDiv.innerHTML = "<p>No donations yet.</p>";
+          return;
+        }
 
-    snap.forEach(docu => {
-        const d = docu.data();
+        listDiv.innerHTML = "";
 
-        listDiv.innerHTML += `
-            <div class="donation-card">
-                <h3>${d.food_type}</h3>
-                <p><b>Quantity:</b> ${d.quantity}</p>
-                <p><b>Location:</b> ${d.location}</p>
-                <p><b>Status:</b> ${d.status}</p>
+        snap.forEach(docu => {
+          const d = docu.data();
 
-                <button class="accept-btn" data-id="${docu.id}">Accept</button>
-                <button class="reject-btn" data-id="${docu.id}">Reject</button>
+          const card = document.createElement("div");
+          card.className = "card";
+
+          card.innerHTML = `
+            <h3>${d.food_type || "Food"}</h3>
+            <p><b>Quantity:</b> ${d.quantity || "-"}</p>
+            <p><b>Location:</b> ${d.location || "-"}</p>
+            <p><b>Status:</b> ${d.status || "-"}</p>
+            <div style="margin-top:8px;">
+              <button class="btn accept-btn" data-id="${docu.id}" style="margin-right: 8px;">Accept</button>
+              <button class="btn outline reject-btn" data-id="${docu.id}">Reject</button>
             </div>
-        `;
-    });
-}
+          `;
 
-loadDonations();
-</script>
+          listDiv.appendChild(card);
+        });
+
+        // Attach event listeners
+        document.querySelectorAll(".accept-btn").forEach(btn => {
+          btn.addEventListener("click", async () => {
+            btn.disabled = true;
+            btn.innerText = "Accepting...";
+            try {
+              const id = btn.dataset.id;
+              const ref = doc(db, "donations", id);
+              await updateDoc(ref, { status: "accepted", acceptedAt: serverTimestamp() });
+              alert("Donation accepted!");
+              loadDonations();
+            } catch (err) {
+              console.error(err);
+              alert("Failed to accept");
+              btn.disabled = false;
+              btn.innerText = "Accept";
+            }
+          });
+        });
+
+        document.querySelectorAll(".reject-btn").forEach(btn => {
+          btn.addEventListener("click", async () => {
+            btn.disabled = true;
+            btn.innerText = "Rejecting...";
+            try {
+              const id = btn.dataset.id;
+              const ref = doc(db, "donations", id);
+              await updateDoc(ref, { status: "rejected", rejectedAt: serverTimestamp() });
+              alert("Donation rejected.");
+              loadDonations();
+            } catch (err) {
+              console.error(err);
+              alert("Failed to reject");
+              btn.disabled = false;
+              btn.innerText = "Reject";
+            }
+          });
+        });
+      } catch (err) {
+        console.error("Donations load failed", err);
+        listDiv.innerHTML = "<p class='note danger'>Failed to load donations</p>";
+      }
+    }
+
+    loadChart();
+    loadDonations();
+  </script>
 
 </body>
 </html>

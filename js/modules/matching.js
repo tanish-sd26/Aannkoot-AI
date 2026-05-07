@@ -1,6 +1,6 @@
 // js/matching.js
-import { calcDistanceKm } from "./utils.js";
-import { db, getDocs, collection, authReady } from "./firebase.js";
+import { calcDistanceKm } from "../utils/utils.js";
+import { db, getDocs, collection, authReady } from "../core/firebase.js";
 
 // Fetch NGOs from Firestore; if fails, fallback to data/ngos.json
 export async function fetchNGOs() {

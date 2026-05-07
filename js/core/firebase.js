@@ -12,7 +12,8 @@ import {
   where,
   orderBy,
   updateDoc,
-  serverTimestamp
+  serverTimestamp,
+  onSnapshot
 } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
 import {
   getAuth,
@@ -56,6 +57,7 @@ export {
   orderBy,
   updateDoc,
   serverTimestamp,
+  onSnapshot,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut
