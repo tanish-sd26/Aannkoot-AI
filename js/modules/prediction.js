@@ -1,5 +1,5 @@
 // js/prediction.js
-import { db, collection, addDoc, serverTimestamp, authReady } from "./firebase.js";
+import { db, collection, addDoc, serverTimestamp, authReady } from "../core/firebase.js";
 
 let sampleData = [];
 
@@ -32,17 +32,19 @@ document.addEventListener("DOMContentLoaded", () => {
     const surplus = plannedFood - requiredFood;
 
     resultDiv.innerHTML = `
-      <div class="card">
-        <h3>Prediction Result</h3>
-        <p><strong>Required:</strong> ${requiredFood.toFixed(2)} kg</p>
-        <p><strong>Planned:</strong> ${plannedFood.toFixed(2)} kg</p>
-        <p><strong>Expected Surplus:</strong> ${surplus.toFixed(2)} kg</p>
-        <div style="margin-top:8px;">
-          <button id="savePrediction" class="btn">Save Prediction</button>
-          <button id="requestNGO" class="btn outline">Request NGO</button>
-        </div>
-      </div>
-    `;
+  <div class="card" style="margin-top:16px;">
+    <h3>📊 Prediction Result</h3>
+
+    <p><strong>Required Food:</strong> ${requiredFood.toFixed(2)} kg</p>
+    <p><strong>Planned Food:</strong> ${plannedFood.toFixed(2)} kg</p>
+    <p><strong>Expected Surplus:</strong> ${surplus.toFixed(2)} kg</p>
+
+    <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+      <button id="savePrediction" class="btn">Save</button>
+      <button id="requestNGO" class="btn outline">Request NGO</button>
+    </div>
+  </div>
+`;
 
     // Save Prediction button
     document.getElementById("savePrediction").onclick = async () => {
